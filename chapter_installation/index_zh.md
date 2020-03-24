@@ -34,7 +34,7 @@ sh Miniconda3-latest-Linux-x86_64.sh -b
 conda create --name d2l -y
 ```
 
-## Downloading the D2L Notebooks 下载D2L笔记本
+## 下载D2L笔记本
 
 接着，你需要下载本书的代码。你可以使用这个[链接](https://d2l.ai/d2l-en-0.7.1.zip) 下载和解压代码。另外，如果可以使用 `unzip` （或者使用 `sudo apt install unzip` 安装）：
 
@@ -109,10 +109,10 @@ pip install mxnet-cu101==1.6.0
 
 像CPU版本一样，支持GPU的MXNet可以通过`pip install -U --pre mxnet-cu101`进行升级。 您可以根据自己的CUDA版本更改最后一位数字，例如，对于CUDA 10.0，为“ cu100”，对于CUDA 9.0，为“ cu90”。 您可以通过`pip search mxnet`找到所有可用的MXNet版本。
 
-## Exercises 练习
+## 练习
 
 1. 下载本书的代码，安装运行环境。
 
-## [Discussions](https://discuss.mxnet.io/t/2315) 讨论
+## [讨论](https://discuss.mxnet.io/t/2315)
 
 ![](../img/qr_install.svg)
