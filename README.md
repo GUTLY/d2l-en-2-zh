@@ -1,50 +1,37 @@
 Dive into Deep Learning
 ========================
 
-```eval_rst
-.. raw:: html
-   :file: frontpage.html
-```
+## 第一部分
+
+### [preface 前言](./chapter_preface/index_zh.md)
+### [installation 软件安装](./chapter_installation/index_zh.md)
+### [notation 符号表](./chapter_notation/index_zh.md)
+
+## 第二部分
+
+1. introduction
+2. preliminaries
+3. linear networks networks
+4. multilayer perceptrons
+5. deep learning computation
+6. convolutional neural networks
+7. modern convolutional modern
+8. recurrent neural networks
+9. modern recurrent neural networks
+10. attention mechanisms
+11. optimization algorithms
+12. computational performance
+13. computer vision
+14. natural language processing: pretraining
+15. natural language processing: applications
+16. recommender systems
+17. generative adversarial networks
+18. appendix: mathematics for deep learning
+19. appendix: tools for deep learning
 
 
-```toc
-:maxdepth: 1
 
-chapter_preface/index
-chapter_installation/index
-chapter_notation/index
-```
+## 第三部分
 
+### references
 
-```toc
-:maxdepth: 2
-:numbered:
-
-chapter_introduction/index
-chapter_preliminaries/index
-chapter_linear-networks/index
-chapter_multilayer-perceptrons/index
-chapter_deep-learning-computation/index
-chapter_convolutional-neural-networks/index
-chapter_convolutional-modern/index
-chapter_recurrent-neural-networks/index
-chapter_recurrent-modern/index
-chapter_attention-mechanisms/index
-chapter_optimization/index
-chapter_computational-performance/index
-chapter_computer-vision/index
-chapter_natural-language-processing-pretraining/index
-chapter_natural-language-processing-applications/index
-chapter_recommender-systems/index
-chapter_generative-adversarial-networks/index
-chapter_appendix-mathematics-for-deep-learning/index
-chapter_appendix-tools-for-deep-learning/index
-
-```
-
-
-```toc
-:maxdepth: 1
-
-chapter_references/zreferences
-```
