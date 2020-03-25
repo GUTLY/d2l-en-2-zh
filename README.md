@@ -9,7 +9,7 @@ Dive into Deep Learning
 
 ## 第二部分
 
-1. introduction
+1. [introduction](./chapter_introduction/index_en_zh.md)
 2. preliminaries
 3. linear networks networks
 4. multilayer perceptrons
