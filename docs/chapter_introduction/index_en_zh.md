@@ -64,15 +64,23 @@ As you might guess, if we just set all of the knobs randomly, it is not likely t
 
 As shown in :numref:`fig_ml_loop`, the training process usually looks like this:
 
+训练过程通常入图`fig_ml_loop` 所示：
+
 1. Start off with a randomly initialized model that cannot do anything useful.
+1. 从一个随机初始化的模型开始，该模型无法做任何有用的事。
 1. Grab some of your labeled data (e.g., audio snippets and corresponding `{yes, no}` labels)
+1. 抓取一些已标记的数据（例如，音频片段和对应的`{yes, no}` 标签）
 1. Tweak the knobs so the model sucks less with respect to those examples
+1. 调整旋钮，以使模型对这些示例中的损失最少
 1. Repeat until the model is awesome.
+1. 重复，直到模型的效果很棒。
 
 ![A typical training process. ](../img/ml-loop.svg)
 :label:`fig_ml_loop`
 
 To summarize, rather than code up a wake word recognizer, we code up a program that can *learn* to recognize wake words, *if we present it with a large labeled dataset*. You can think of this act of determining a program's behavior by presenting it with a dataset as *programming with data*. We can "program" a cat detector by providing our machine learning system with many examples of cats and dogs, such as the images below:
+
+总之，在*我们展示它大量标记数据集* 后，我们可以编写一个可以*学习* 识别唤醒词的程序而不是编写一个唤醒词识别程序。您可以认为通过将数据集来决定程序的行为，它又被称为*用数据编程* 。我们通过在机器学习系统中提供许多猫和狗的样本，来编写一个猫识别器。样本示例如下：
 
 |cat|cat|dog|dog|
 |:---------------:|:---------------:|:---------------:|:---------------:|
@@ -80,42 +88,66 @@ To summarize, rather than code up a wake word recognizer, we code up a program t
 
 This way the detector will eventually learn to emit a very large positive number if it is a cat, a very large negative number if it is a dog, and something closer to zero if it is not sure, and this barely scratches the surface of what ML can do.
 
+这样，如果它是猫，识别器最终将学会得到一个非常大的正数；如果是狗，它最终将得到一个非常大的负数；如果不确定，它会接近于零，这只是机器学习非常浅显的应用。
+
 Deep learning is just one among many popular methods for solving machine learning problems. Thus far, we have only talked about machine learning broadly and not deep learning. To see why deep learning is important, we should pause for a moment to highlight a couple crucial points.
 
+深度学习只是解决机器学习问题的众多流行方法之一。到目前为止，我们仅广泛地讨论了机器学习，而不是深度学习。为了展示机器学习的重要性，我们先暂停一会儿，学习一些重要的概念。
+
 First, the problems that we have discussed thus far---learning from raw audio signal, the raw pixel values of images, or mapping between sentences of arbitrary lengths and their counterparts in foreign languages---are problems where deep learning excels and where traditional ML methods faltered. Deep models are *deep* in precisely the sense that they learn many *layers* of computation. It turns out that these many-layered (or hierarchical) models are capable of addressing low-level perceptual data in a way that previous tools could not. In bygone days, the crucial part of applying ML to these problems consisted of coming up with manually-engineered ways of transforming the data into some form amenable to *shallow* models. One key advantage of deep learning is that it replaces not only the *shallow* models at the end of traditional learning pipelines, but also the labor-intensive process of feature engineering. Second, by replacing much of the *domain-specific preprocessing*, deep learning has eliminated many of the boundaries that previously separated computer vision, speech recognition, natural language processing, medical informatics, and other application areas, offering a unified set of tools for tackling diverse problems.
+
+首先，看一看我们目前讨论的问题（从原始音频信号、图像原始像素值中学习，将任意长度句子与使用语言相对应）。争对这些问题，深度学习远超过传统机器学习方法。精确的说，深度模型中*深度* 一词的来源是它从许多计算*层* 中学习。事实证明，这些多层次（或分层）模型能够以以前的工具无法解决的方式处理低层感知数据。过去，这些问题使用机器学习关键部分包括提出手动设计的方法，将数据转换为适合*浅层* 模型的形式。深度学习的一个关键优势便是，它不仅可以取代传统学习渠道末尾的*浅层* 模型，还可以取代需要繁重工作的特征工程。第二，通过取代许多*特定领域的预处理*，深度学习打破了分隔计算机视觉、语音识别、自然语言处理、医学信息学和许多其他领域的边界，同时提供了一套统一的工具来解决不同问题。
 
 
 ## 1.2 The Key Components: Data, Models, and Algorithms 关键组件：数据，模型和算法
 
 In our *wake-word* example, we described a dataset consisting of audio snippets and binary labels gave a hand-wavy sense of how we might *train* a model to approximate a mapping from snippets to classifications. This sort of problem, where we try to predict a designated unknown *label* given known *inputs*, given a dataset consisting of examples, for which the labels are known is called *supervised learning*, and it is just one among many *kinds* of machine learning problems. In the next section, we will take a deep dive into the different ML problems. First, we'd like to shed more light on some core components that will follow us around, no matter what kind of ML problem we take on:
 
+在我们*唤醒词* 的示例中，我们描述了一个由音频片段和二元标签组成的数据集，使我们对如何*训练* 模型来近似从片段到分类的映射有了一种基本的感觉。这种问题，在给定已知*输入* 的情况下，我们尝试预测指定的未知*标签*，给定一个由样本组成的数据集，其中已知样本标签的情况称为*有监督学习*，这只是机器学习众多种类中的一类。在下一节中，我们将深入探讨不同的机器学习问题。首先，无论我们遇到哪种机器学习问题，我们都需要更多地了解一些核心组件：
+
 1. The *data* that we can learn from.
-2. A *model* of how to transform the data.
-3. A *loss* function that quantifies the *badness* of our model.
-4. An *algorithm* to adjust the model's parameters to minimize the loss.
+2. 我们可以用来学习的*数据* 。
+3. A *model* of how to transform the data.
+4. 一个转换数据的*模型* 。
+5. A *loss* function that quantifies the *badness* of our model.
+6. 一个*损失* 函数来量化模型的*缺陷* 。
+7. An *algorithm* to adjust the model's parameters to minimize the loss.
+8. 一个用来修改模型参数最小化*损失* 的算法。
 
 
-### Data 数据
+### 1.2.1 Data 数据
 
 It might go without saying that you cannot do data science without data. We could lose hundreds of pages pondering what precisely constitutes data, but for now we will err on the practical side and focus on the key properties to be concerned with. Generally we are concerned with a collection of *examples* (also called *data points*, *samples*, or *instances*). In order to work with data usefully, we typically need to come up with a suitable numerical representation. Each *example* typically consists of a collection of numerical attributes called *features*. In the supervised learning problems above, a special feature is designated as the prediction *target*, (sometimes called the *label* or *dependent variable*). The given features from which the model must make its predictions can then simply be called the *features*, (or often, the *inputs*, *covariates*, or *independent variables*).
 
+不用说，没有数据你无法进行数据科学。我们可能会浪费数百页来仔细考虑数据的确切构成，但将会在实际应用上犯错，并专注于要关注的关键属性。一般来说，我们关心一组*示例*（或称*数据点，样本，或实例* ）集。为了合理的利用数据，我们需要提出一个合适的数字表示。每一个*示例* 一般主要由称为*特征* 的数字属性集。在上述的监督学习问题中，一个指定特别的特征，被作为预测的*目标*（有时又称为*标签* 或*因变量* ）。然后，可以将模型必须根据其进行预测的给定特征简单地称为*特征*（或通常称为*输入*，*协变量*或*独立变量* ）。
+
 If we were working with image data, each individual photograph might constitute an *example*, each represented by an ordered list of numerical values corresponding to the brightness of each pixel. A $200\times 200$ color photograph would consist of $200\times200\times3=120000$ numerical values, corresponding to the brightness of the red, green, and blue channels for each spatial location. In a more traditional task, we might try to predict whether or not a patient will survive, given a standard set of features such as age, vital signs, diagnoses, etc.
+
+如果我们使用图像数据，则每张照片可能会构成一个*样本*，每张照片都由每个像素的亮度相对应的数字值的有序列表表示。一个 $200\times 200$ 的彩色图片由 $200\times200\times3=120000$ 个数组成，分别对应每个位置的红色，绿色和蓝色通道的亮度。在很多传统的任务中，我们常根据患者的年龄、生命体征、诊断信息等特征来预测患者的存活概率。
 
 When every example is characterized by the same number of numerical values, we say that the data consists of *fixed-length* vectors and we describe the (constant) length of the vectors as the *dimensionality* of the data. As you might imagine, fixed length can be a convenient property. If we wanted to train a model to recognize cancer in microscopy images, fixed-length inputs means we have one less thing to worry about.
 
+当每个样本都使用相同数量的数字来表示后，我们称之为定长的矢量，将矢量的长度称为数据的*维度*。你可能想到，定长是一个很好的性质。如果我们想训练一个从显微镜图像中识别癌症的模型，则定长输入意味着我们不必担心一件事。
+
 However, not all data can easily be represented as fixed length vectors. While we might expect microscope images to come from standard equipment, we cannot expect images mined from the Internet to all show up with the same resolution or shape. For images, we might consider cropping them all to a standard size, but that strategy only gets us so far. We risk losing information in the cropped out portions. Moreover, text data resists fixed-length representations even more stubbornly. Consider the customer reviews left on e-commerce sites like Amazon, IMDB, or TripAdvisor. Some are short: "it stinks!". Others ramble for pages. One major advantage of deep learning over traditional methods is the comparative grace with which modern models can handle *varying-length* data.
+
+然而，并不是所有数据都可以使用定长矢量来表示。虽然我们可能希望显微镜图像来自标准设备，但我们不能期望从互联网上采集的图像都能以相同的分辨率或形状显示。对于图像，我们或许可以考虑裁剪它们到同一尺寸，但是这种策略仅能使我们走到现在。我们可能会因裁剪损失部分信息。此外，文本数据甚至更难使用定长表示。像顾客在亚马逊、IMDB或TripAdvisor这种电子商务网站的评论。有些很短，如“it stinks!”。其他人则只是随便看看。深度学习相对于传统方法的一个主要的优势便是这个现代模型可以优雅的处理*可变长度* 数据。
 
 Generally, the more data we have, the easier our job becomes. When we have more data, we can train more powerful models, and rely less heavily on pre-conceived assumptions. The regime change from (comparatively small) to big data is a major contributor to the success of modern deep learning. To drive the point home, many of the most exciting models in deep learning do not work without large datasets. Some others work in the low-data regime, but are no better than traditional approaches.
 
+一般来说，数据越多，工作越容易。当我们有更多数据后，我们可以训练更多有用的模型，并减少了对预想假设的依赖。从（相对较小的数据集）到大数据的体制转变是现代深度学习成功的主要推动力。如果没有大型数据集，深度学习中许多最令人激动的模型就无法工作。在小数据集上的效果，深度学习并不比传统方法更好。
+
 Finally it is not enough to have lots of data and to process it cleverly. We need the *right* data. If the data is full of mistakes, or if the chosen features are not predictive of the target quantity of interest, learning is going to fail. The situation is captured well by the cliché: *garbage in, garbage out*. Moreover, poor predictive performance is not the only potential consequence. In sensitive applications of machine learning, like predictive policing, resumé screening, and risk models used for lending, we must be especially alert to the consequences of garbage data. One common failure mode occurs in datasets where some groups of people are unrepresented in the training data. Imagine applying a skin cancer recognition system in the wild that had never seen black skin before. Failure can also occur when the data does not merely under-represent some groups, but reflects societal prejudices. For example if past hiring decisions are used to train a predictive model that will be used to screen resumes, then machine learning models could inadvertently capture and automate historical injustices. Note that this can all happen without the data scientist actively conspiring, or even being aware.
 
+有许多数据并正确的处理它是不够的。我们需要*正确的* 数据。如果数据充满错误或或者所选特征不能预测目标，学习将失败。这就是典型的*无用输入，无用输出* 的情况。而且低预测性能不是唯一的潜在后果。机器学习在一些敏感场景的应用，例如预测性治安状况，简历筛选以及用于贷款的风险模型，我们必须特别警惕垃圾数据带来的后果。
 
-### Models 模型
+
+### 1.2.2 Models 模型
 
 Most machine learning involves *transforming* the data in some sense. We might want to build a system that ingests photos and predicts *smiley-ness*. Alternatively, we might want to ingest a set of sensor readings and predict how *normal* vs *anomalous* the readings are. By *model*, we denote the computational machinery for ingesting data of one type, and spitting out predictions of a possibly different type. In particular, we are interested in statistical models that can be estimated from data. While simple models are perfectly capable of addressing appropriately simple problems the problems that we focus on in this book stretch the limits of classical methods. Deep learning is differentiated from classical approaches principally by the set of powerful models that it focuses on. These models consist of many successive transformations of the data that are chained together top to bottom, thus the name *deep learning*. On our way to discussing deep neural networks, we will discuss some more traditional methods.
 
 
-###  Objective functions 目标功能
+###  1.2.3 Objective functions 目标功能
 
 Earlier, we introduced machine learning as "learning from experience". By *learning* here, we mean *improving* at some task over time. But who is to say what constitutes an improvement? You might imagine that we could propose to update our model, and some people might disagree on whether the proposed update constituted an improvement or a decline.
 
@@ -129,12 +161,12 @@ Typically, the loss function is defined with respect to the model's parameters a
  * **Test Error:** This is the error incurred on an unseen test set. This can deviate significantly from the training error. When a model performs well on the training data but fails to generalize to unseen data, we say that it is *overfitting*. In real-life terms, this is like flunking the real exam despite doing well on practice exams.
 
 
-### Optimization algorithms 优化算法
+### 1.2.4 Optimization algorithms 优化算法
 
 Once we have got some data source and representation, a model, and a well-defined objective function, we need an algorithm capable of searching for the best possible parameters for minimizing the loss function. The most popular optimization algorithms for neural networks follow an approach called gradient descent. In short, at each step, they check to see, for each parameter, which way the training set loss would move if you perturbed that parameter just a small amount. They then update the parameter in the direction that reduces the loss.
 
 
-## Kinds of Machine Learning 机器学习种类
+## 1.3 Kinds of Machine Learning 机器学习种类
 
 In the following sections, we discuss a few *kinds* of machine learning problems in greater detail. We begin with a list of *objectives*, i.e., a list of things that we would like machine learning to do. Note that the objectives are complemented with a set of techniques of *how* to accomplish them, including types of data, models, training techniques, etc. The list below is just a sampling of the problems ML can tackle to motivate the reader and provide us with some common language for when we talk about more problems throughout the book.
 
