@@ -135,60 +135,93 @@ However, not all data can easily be represented as fixed length vectors. While w
 
 Generally, the more data we have, the easier our job becomes. When we have more data, we can train more powerful models, and rely less heavily on pre-conceived assumptions. The regime change from (comparatively small) to big data is a major contributor to the success of modern deep learning. To drive the point home, many of the most exciting models in deep learning do not work without large datasets. Some others work in the low-data regime, but are no better than traditional approaches.
 
-一般来说，数据越多，工作越容易。当我们有更多数据后，我们可以训练更多有用的模型，并减少了对预想假设的依赖。从（相对较小的数据集）到大数据的体制转变是现代深度学习成功的主要推动力。如果没有大型数据集，深度学习中许多最令人激动的模型就无法工作。在小数据集上的效果，深度学习并不比传统方法更好。
+一般来说，数据越多，工作越容易。当我们有更多数据后，我们可以训练更多有用的模型，并减少了对预想假设的依赖。从（相对较小的数据集）到大数据的体制转变是现代深度学习成功的主要推动力。如果没有大型数据集，深度学习中许多最令人激动的模型就无法工作。在小数据集上的效果，深度学习并不比传统方法好。
 
 Finally it is not enough to have lots of data and to process it cleverly. We need the *right* data. If the data is full of mistakes, or if the chosen features are not predictive of the target quantity of interest, learning is going to fail. The situation is captured well by the cliché: *garbage in, garbage out*. Moreover, poor predictive performance is not the only potential consequence. In sensitive applications of machine learning, like predictive policing, resumé screening, and risk models used for lending, we must be especially alert to the consequences of garbage data. One common failure mode occurs in datasets where some groups of people are unrepresented in the training data. Imagine applying a skin cancer recognition system in the wild that had never seen black skin before. Failure can also occur when the data does not merely under-represent some groups, but reflects societal prejudices. For example if past hiring decisions are used to train a predictive model that will be used to screen resumes, then machine learning models could inadvertently capture and automate historical injustices. Note that this can all happen without the data scientist actively conspiring, or even being aware.
 
-有许多数据并正确的处理它是不够的。我们需要*正确的* 数据。如果数据充满错误或或者所选特征不能预测目标，学习将失败。这就是典型的*无用输入，无用输出* 的情况。而且低预测性能不是唯一的潜在后果。机器学习在一些敏感场景的应用，例如预测性治安状况，简历筛选以及用于贷款的风险模型，我们必须特别警惕垃圾数据带来的后果。
+有许多数据并正确的处理它是不够的。我们需要*正确的* 数据。如果数据充满错误或或者所选特征不能预测目标，学习将失败。这就是典型的*无用输入，无用输出* 的情况。而且低预测性能不是唯一的潜在后果。机器学习在一些敏感场景的应用，例如预测性治安状况，简历筛选以及用于贷款的风险模型，我们必须特别警惕垃圾数据带来的后果。一个常见的失败模型，就发生在训练数据集包含无意义的数据。试想一下，如果一个皮肤癌识别系统在使用之前从未见过黑色皮肤。当数据不仅无法代表某些群体，而且反映出社会偏见时，也会带来失败。例如，使用通过招聘的简历来训练预测模型，那么机器学习模型可能会无意间捕获并自动带来偏见。请注意，这一切都可能在没有数据科学家积极合作或在毫无感觉的情况下发生。
 
 
 ### 1.2.2 Models 模型
 
 Most machine learning involves *transforming* the data in some sense. We might want to build a system that ingests photos and predicts *smiley-ness*. Alternatively, we might want to ingest a set of sensor readings and predict how *normal* vs *anomalous* the readings are. By *model*, we denote the computational machinery for ingesting data of one type, and spitting out predictions of a possibly different type. In particular, we are interested in statistical models that can be estimated from data. While simple models are perfectly capable of addressing appropriately simple problems the problems that we focus on in this book stretch the limits of classical methods. Deep learning is differentiated from classical approaches principally by the set of powerful models that it focuses on. These models consist of many successive transformations of the data that are chained together top to bottom, thus the name *deep learning*. On our way to discussing deep neural networks, we will discuss some more traditional methods.
 
+大多数机器学习都在某种意义上涉及*转换* 数据。我们有时可能想通过照片来预测是否是*笑脸*。或者，我们有时希望以一组传感器读数，并预测读数的*正常* 与*异常* 状态。通过*模型*，我们使计算机系统从一种类型的输入数据得到不同类型的预测。特别的，我们对可能对数据估算的统计模型感兴趣。虽然简单的模型完全能够解决适当的简单问题，但我们在本书中关注的问题却扩展了经典方法的局限性。深度学习与经典方法的区别主要是关注的一组强大模型。这些模型由数据的许多连续变换组成，这些变换从上到下链接在一起，因此得名*深度学习*。在讨论深度神经网络的方式上，我们将讨论一些更传统的方法。
 
-###  1.2.3 Objective functions 目标功能
+
+###  1.2.3 Objective functions 目标函数
 
 Earlier, we introduced machine learning as "learning from experience". By *learning* here, we mean *improving* at some task over time. But who is to say what constitutes an improvement? You might imagine that we could propose to update our model, and some people might disagree on whether the proposed update constituted an improvement or a decline.
 
+前文中，我们已经将机器学习表述为*从经验中学习*。这里的*学习* 指的是在某些任务随着时间的*改进*。但是什么构成了进步呢？你可能会想到我们可以提议更新模型，而有些人可能对提议的更新是改善还是减少持不同意见。
+
 In order to develop a formal mathematical system of learning machines, we need to have formal measures of how good (or bad) our models are. In machine learning, and optimization more generally, we call these objective functions. By convention, we usually define objective functions so that *lower* is *better*. This is merely a convention. You can take any function $f$ for which higher is better, and turn it into a new function $f'$ that is qualitatively identical but for which lower is better by setting $f' = -f$. Because lower is better, these functions are sometimes called *loss functions* or *cost functions*.
+
+为了开发机器学习的数字系统，我们需要对模型的好坏有一个统一的度量。在机器学习和更广泛的优化中，我们称这些目标函数。一般来说我们希望目标函数*越低越好*。同样，你也可以认为函数 $f$ 越高越好，然后通过设置$f' = -f$ 将其转换为质量上相同但较低的更好的新函数$ f'$。正因为越低越好，这个函数有时被称为*损失函数*。
 
 When trying to predict numerical values, the most common objective function is squared error $(y-\hat{y})^2$. For classification, the most common objective is to minimize error rate, i.e., the fraction of instances on which our predictions disagree with the ground truth. Some objectives (like squared error) are easy to optimize. Others (like error rate) are difficult to optimize directly, owing to non-differentiability or other complications. In these cases, it is common to optimize a *surrogate objective*.
 
+在预测数字值时，最常用的目标函数便是平方误差$(y-\hat{y})^2$。对于分类，最常见的目标函数是最小化错误率，即我们的预测与基本事实不一致的样本所占的比例。一些目标函数（如平方误差）很容易优化。其他的目标函数（如错误率）由于不可微或其他复杂性而难以直接优化。在这些情况下，常使用*替代目标* 来优化。
+
 Typically, the loss function is defined with respect to the model's parameters and depends upon the dataset. The best values of our model's parameters are learned by minimizing the loss incurred on a *training set* consisting of some number of *examples* collected for training. However, doing well on the training data does not guarantee that we will do well on (unseen) test data. So we will typically want to split the available data into two partitions: the training data (for fitting model parameters) and the test data (which is held out for evaluation), reporting the following two quantities:
 
+通常，损失函数是根据模型的参数定义的，并取决于数据集。通过最小化*训练集* 所造成的损失来学习模型参数的最佳值，该*训练集* 包含一些为训练而收集的*示例*。然而，在训练数据上的表现并不能保证我们会在（未知的）测试数据上做得很好。所以，我们一般将可用的数据分为两部分：训练数据（用于拟合模型参数）和测试数据（用于评估），使用这两部分表示：
+
  * **Training Error:** The error on that data on which the model was trained. You could think of this as being like a student's scores on practice exams used to prepare for some real exam. Even if the results are encouraging, that does not guarantee success on the final exam.
+ * 训练误差：训练模型在数据上的误差。你可以认为这个就像学生在用于准备一些真实的考试时测试考试中的得分。即使即使在测试考试中表现不错，但并不意味着这可以作为最终考试是否成功的依据。
  * **Test Error:** This is the error incurred on an unseen test set. This can deviate significantly from the training error. When a model performs well on the training data but fails to generalize to unseen data, we say that it is *overfitting*. In real-life terms, this is like flunking the real exam despite doing well on practice exams.
+ * 测试误差：这是在未知的测试集上发生的错误。这可能与训练误差完全不同。当一个模型在训练数据集上表现的很好，但在未知数据上的表现不好，我们称之为*过拟合*。 从现实生活的角度来看，这就像在测试考试中表现很好，却在正式考试中不及格。
 
 
 ### 1.2.4 Optimization algorithms 优化算法
 
 Once we have got some data source and representation, a model, and a well-defined objective function, we need an algorithm capable of searching for the best possible parameters for minimizing the loss function. The most popular optimization algorithms for neural networks follow an approach called gradient descent. In short, at each step, they check to see, for each parameter, which way the training set loss would move if you perturbed that parameter just a small amount. They then update the parameter in the direction that reduces the loss.
 
+当我们有原始数据和它们转化后的表示，训练模型和不错的目标函数，我们需要一个学习算法，它能搜索到最大可能损失函数的参数。在神经网络中，最为常有的算法便是梯度下降。这种方法简而言之，就是在每个步骤中，检查每个参数，如果仅对参数进行微小改变，训练集损失会像那个方向移动。接着，沿这减少损失的方向更新参数。
+
 
 ## 1.3 Kinds of Machine Learning 机器学习种类
 
 In the following sections, we discuss a few *kinds* of machine learning problems in greater detail. We begin with a list of *objectives*, i.e., a list of things that we would like machine learning to do. Note that the objectives are complemented with a set of techniques of *how* to accomplish them, including types of data, models, training techniques, etc. The list below is just a sampling of the problems ML can tackle to motivate the reader and provide us with some common language for when we talk about more problems throughout the book.
 
+在以下各节中，我们将更详细地讨论几种机器学习问题。我们从*目标* 开始，即我们想让机器学习所做的事。注意，目标包括一系列*如何* 实现它所需要的技术，包括数据类型，模型，训练技术等。下面的列表只是ML可以解决的一些问题示例，这些示例可以激发读者并为我们在本书中讨论更多问题时提供一些通用样本。
+
 ### Supervised learning 监督学习
 
-Supervised learning addresses the task of predicting *targets* given *inputs*. The targets, which we often call *labels*, are generally denoted by *y*. The input data, also called the *features* or covariates, are typically denoted $\mathbf{x}$. Each (input, target) pair is called an *examples* or an *instances*. Some times, when the context is clear, we may use the term examples, to refer to a collection of inputs, even when the corresponding targets are unknown. We denote any particular instance with a subscript, typically $i$, for instance ($\mathbf{x}*i, y_i$). A dataset is a collection of $n$ instances  $\{\mathbf{x}_i, y_i\}_{i=1}^n$. Our goal is to produce a model $f*\theta$ that maps any input $\mathbf{x}*i$ to a prediction $f*{\theta}(\mathbf{x}_i)$.
+Supervised learning addresses the task of predicting *targets* given *inputs*. The targets, which we often call *labels*, are generally denoted by *y*. The input data, also called the *features* or covariates, are typically denoted $\mathbf{x}$. Each (input, target) pair is called an *examples* or an *instances*. Some times, when the context is clear, we may use the term examples, to refer to a collection of inputs, even when the corresponding targets are unknown. We denote any particular instance with a subscript, typically $i$, for instance ($\mathbf{x}*i, y_i$). A dataset is a collection of $n$ instances  $\{\mathbf{x}_i, y_i\}_{i=1}^n$. Our goal is to produce a model $f_\theta$ that maps any input $\mathbf{x}_i$ to a prediction $f_{\theta}(\mathbf{x}_i)$.
+
+监督学习解决了在根据给定*输入* 的情况下预测*目标* 的任务。这个目标，我们通常称之为*标签*，常用 *y* 表示。输入数据， 又称为*特征* 或协变量，使用 $\mathbf{x}$ 表示。每一对（输入，目标）称为*样本* 或*实例*。有时，在表述清晰时，我们使用样本来表示输入集，即使这时对应的目标并不清楚。我们常用下标 $i$ 来表示任意一个特定的实例，例如 ($\mathbf{x}*i, y_i$)。一个数据集是 $n$ 个实例的集合 $\{\mathbf{x}_i, y_i\}_{i=1}^n$。我们的目标是得到一个 $f_\theta$ 的模型，可以对任何输入 $\mathbf{x}_i$ 得到一个预测 $f_{\theta}(\mathbf{x}_i)$。
 
 To ground this description in a concrete example, if we were working in healthcare, then we might want to predict whether or not a patient would have a heart attack. This observation, *heart attack* or *no heart attack*, would be our label $y$. The input data $\mathbf{x}$ might be vital signs such as heart rate, diastolic and systolic blood pressure, etc.
 
+以一个具体例子为例，如果我们关注于医疗，那么我们可能想预测一个病人是否有心脏病。显然，*有心脏病* 或*没有心脏病*，就是我们的标签 $y$。输入数据 $\mathbf{x}$ 可能是像心率、舒张压和收缩压等这样的生命体征。
+
 The supervision comes into play because for choosing the parameters $\theta$, we (the supervisors) provide the model with a dataset consisting of *labeled examples* ($\mathbf{x}_i, y_i$), where each example $\mathbf{x}_i$ is matched with the correct label.
+
+监督因参数 $\theta$ 的选择起作用，我们（监督者）为模型提供了由*带标签的示例* ($\mathbf{x}_i, y_i$) 组成的数据集，其中每个示例  $\mathbf{x}_i$ 与正确的标签匹配。
 
 In probabilistic terms, we typically are interested in estimating the conditional probability $P(y|x)$. While it is just one among several paradigms within machine learning, supervised learning accounts for the majority of successful applications of machine learning in industry. Partly, that is because many important tasks can be described crisply as estimating the probability of something unknown given a particular set of available data:
 
+在概率论中，我们一般对条件概率 $P(y|x)$ 感兴趣。以下是机器学习中监督学习在生产中的一些成功应用。这在一定程度上是因为，许多重要的任务可以简单地描述为：在给定一组特定的可用数据的情况下，对未知事件的概率进行估计:
+
 * Predict cancer vs not cancer, given a CT image.
+* 根据CT图预测是否患癌.
 * Predict the correct translation in French, given a sentence in English.
+* 根据英文句子预测正确的法文翻译。
 * Predict the price of a stock next month based on this month's financial reporting data.
+* 根据本月金融数据预测下月股票价格。
 
 Even with the simple description "predict targets from inputs" supervised learning can take a great many forms and require a great many modeling decisions, depending on (among other considerations) the type, size, and the number of inputs and outputs. For example, we use different models to process sequences (like strings of text or time series data) and for processing fixed-length vector representations. We will visit many of these problems in depth throughout the first 9 parts of this book.
 
+即使使用简单的描述为*根据输入预测目标*，监督学习也可以采用多种形式，并且需要进行大量的建模决策，这取决于（除其他因素外）输入，输出的类型，大小以及数量。例如，我么使用不同的模型处理像文本字符串或时间序列数据这样的序列，并使用定长的矢量来表示。在本书的前9章我们会深入探讨许多这种类似的问题。
+
 Informally, the learning process looks something like this: Grab a big collection of examples for which the covariates are known and select from them a random subset, acquiring the ground truth labels for each. Sometimes these labels might be available data that has already been collected (e.g., did a patient die within the following year?) and other times we might need to employ human annotators to label the data, (e.g., assigning images to categories).
 
+通俗的说，学习过程就像这样：选取大量已知协变量的样本集，并从中随机选取子集，来获得对应的标签。有时这些标签可能是已经收集到（例如，病人是否在一年内死亡？）但有时我们可能需要雇佣人来对数据进行标记，（例如，将图像分类）。
+
 Together, these inputs and corresponding labels comprise the training set. We feed the training dataset into a supervised learning algorithm, a function that takes as input a dataset and outputs another function, *the learned model*. Finally, we can feed previously unseen inputs to the learned model, using its outputs as predictions of the corresponding label. The full process in drawn in :numref:`fig_supervised_learning`.
+
+这些输入和对应的标签构成了训练集。我们将训练数据集输入到监督学习算法中，该函数将数据集作为输入并输出另一个函数，即*学习模型*。最后，我们可以将先前未见过的输入提供给学习的模型，并将其输出用作相应标签的预测。处理过程如图。
 
 ![Supervised learning.](../img/supervised-learning.svg)
 :label:`fig_supervised_learning`
@@ -198,12 +231,19 @@ Together, these inputs and corresponding labels comprise the training set. We fe
 
 Perhaps the simplest supervised learning task to wrap your head around is *regression*. Consider, for example a set of data harvested from a database of home sales. We might construct a table, where each row corresponds to a different house, and each column corresponds to some relevant attribute, such as the square footage of a house, the number of bedrooms, the number of bathrooms, and the number of minutes (walking) to the center of town. In this dataset each *example* would be a specific house, and the corresponding *feature vector* would be one row in the table.
 
+可能最简单的监督学习任务就是*回归*。例如，考虑从房屋销售数据库中收集的一组数据。这可能是一张表，其中每一行表示对应不同的房子，每一列对应相关属性，例如房屋的面积、卧室数、浴室数、走到市中心的时间（单位：分钟）。在此数据集中，每个*样本* 是一栋特定的房子，而对应的*属性矩阵* 将是表中的一行。
+
 If you live in New York or San Francisco, and you are not the CEO of Amazon, Google, Microsoft, or Facebook, the (sq. footage, no. of bedrooms, no. of bathrooms, walking distance) feature vector for your home might look something like: $[100, 0, .5, 60]$. However, if you live in Pittsburgh, it might look more like $[3000, 4, 3, 10]$. Feature vectors like this are essential for most classic machine learning algorithms. We will continue to denote the feature vector correspond to any example $i$ as $\mathbf{x}_i$ and we can compactly refer to the full table containing all of the feature vectors as $X$.
+
+如果你居住在纽约和旧金山，并且不是亚马逊、谷歌、微软或脸谱的CEO，那么（房屋的面积【英尺】、卧室数、浴室数、步行距离）的属性矩阵你或许可以看成这样：$[100, 0, .5, 60]$。然而，如果你居住在匹兹堡，属性矩阵或许是这样 $[3000, 4, 3, 10]$。像这样的特征向量对于大多数经典的机器学习算法来说都是必不可少的。我们使用 $\mathbf{x}_i$ 来表示样本 $i$ 对应的属性矩阵，我们可以将包含所有特征向量的完整表简洁的表示为 $X$。
 
 What makes a problem a *regression* is actually the outputs. Say that you are in the market for a new home. You might want to estimate the fair market value of a house, given some features like these. The target value, the price of sale, is a *real number*. If you remember the formal definition of the reals you might be scratching your head now. Homes probably never sell for fractions of a cent, let alone prices expressed as irrational numbers. In cases like this, when the target is actually discrete, but where the rounding takes place on a sufficiently fine scale, we will abuse language just a bit and continue to describe our outputs and targets as real-valued numbers.
 
+导致*回归* 问题的实际上是输出。假设你正在寻找新家。因此，你能需要估算房屋的真实市场价。售价就是目标值，它是一个*实数*。如果您还记得关于实数的定义，那么你现在可能会迷惑。房屋可能永远不会以不到一分钱的价格出售，更不用说以不合理数字表示的价格了。在这个情况下，当目标实际上是离散的，但能在足够小的范围内进行舍入时，我们将稍微滥用语言，并继续将输出和目标描述为实数值。
 
-We denote any individual target $y_i$ (corresponding to example $\mathbf{x}i$) and the set of all targets $\mathbf{y}$ (corresponding to all examples $X$). When our targets take on arbitrary values in some range, we call this a regression problem. Our goal is to produce a model whose predictions closely approximate the actual target values. We denote the predicted target for any instance $\hat{y}_i$. Do not worry if the notation is bogging you down. We will unpack it more thoroughly in the subsequent chapters.
+We denote any individual target $y_i$ (corresponding to example $\mathbf{x}_i$) and the set of all targets $\mathbf{y}$ (corresponding to all examples $X$). When our targets take on arbitrary values in some range, we call this a regression problem. Our goal is to produce a model whose predictions closely approximate the actual target values. We denote the predicted target for any instance $\hat{y}_i$. Do not worry if the notation is bogging you down. We will unpack it more thoroughly in the subsequent chapters.
+
+我们使用 $y_i$ 来表示任意一个目标（对应样本 $\mathbf{x}_i$），所有目标的集合使用 $\mathbf{y}$ 表示（对应样本 $X$）。当目标可以使用某个区间的任意值时，我们称之为回归问题。我们的目标值便是得到与真实值的相近的估计值。我们使用 $\hat{y}_i$表示任何样本的预测目标。不必对这些符号感到困惑，我们将在随后的章节中深入介绍。
 
 Lots of practical problems are well-described regression problems. Predicting the rating that a user will assign to a movie can be thought of as a regression problem and if you designed a great algorithm to accomplish this feat in 2009, you might have won the [1-million-dollar Netflix prize](https://en.wikipedia.org/wiki/Netflix_Prize). Predicting the length of stay for patients in the hospital is also a regression problem. A good rule of thumb is that any *How much?* or *How many?* problem should suggest regression.
 
