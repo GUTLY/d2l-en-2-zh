@@ -10,8 +10,8 @@ Dive into Deep Learning
 ## 第二部分
 
 1. [introduction 简介](./docs/chapter_introduction/index_en_zh.md)
-2. preliminaries
-3. linear networks networks
+2. [preliminaries 预备知识](./docs/chapter_preliminaries/index_en_zh.md)
+3. linear neural networks
 4. multilayer perceptrons
 5. deep learning computation
 6. convolutional neural networks
