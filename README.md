@@ -3,14 +3,14 @@ Dive into Deep Learning
 
 ## 第一部分
 
-### [preface 前言](./docs/chapter_preface/index_zh.md)
-### [installation 软件安装](./docs/chapter_installation/index_zh.md)
-### [notation 符号表](./docs/chapter_notation/index_zh.md)
+### [preface 前言](./chapter_preface/index_zh.md)
+### [installation 软件安装](./chapter_installation/index_zh.md)
+### [notation 符号表](./chapter_notation/index_zh.md)
 
 ## 第二部分
 
-1. [introduction 简介](./docs/chapter_introduction/index_en_zh.md)
-2. [preliminaries 预备知识](./docs/chapter_preliminaries/index_en_zh.md)
+1. [introduction 简介](./chapter_introduction/index_en_zh.md)
+2. [preliminaries 预备知识](./chapter_preliminaries/index_en_zh.md)
 3. linear neural networks
 4. multilayer perceptrons
 5. deep learning computation
